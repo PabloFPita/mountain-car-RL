@@ -3,14 +3,15 @@ import numpy as np
 import matplotlib.pyplot as plt
 import pickle
 import sys
+import time
 
 def run(episodes, is_training=True, render=False):
 
     env = gym.make('MountainCar-v0', render_mode='human' if render else None)
 
     # Divide position and velocity into segments. To discretize the state space.
-    pos_space = np.linspace(env.observation_space.low[0], env.observation_space.high[0], 20)    # Between -1.2 and 0.6
-    vel_space = np.linspace(env.observation_space.low[1], env.observation_space.high[1], 20)    # Between -0.07 and 0.07
+    pos_space = np.linspace(env.observation_space.low[0], env.observation_space.high[0], 40)    # Between -1.2 and 0.6
+    vel_space = np.linspace(env.observation_space.low[1], env.observation_space.high[1], 40)    # Between -0.07 and 0.07
 
     if(is_training):
         q = np.zeros((len(pos_space), len(vel_space), env.action_space.n)) # init a 20x20x3 array
@@ -27,6 +28,8 @@ def run(episodes, is_training=True, render=False):
     rng = np.random.default_rng()   # random number generator
 
     rewards_per_episode = np.zeros(episodes)
+    
+    start_time = time.time()  # Start timing
 
     for i in range(episodes):
         state = env.reset()[0]      # Starting position, starting velocity always 0
@@ -65,7 +68,7 @@ def run(episodes, is_training=True, render=False):
         rewards_per_episode[i] = rewards
 
         # Print the current state of the process every 5 episodes
-        if i % 5 == 0 and is_training:
+        if  is_training and i % 100 == 0:
             print(f"Episode: {i}, Rewards: {rewards}, Epsilon: {epsilon}")
 
     env.close()
@@ -79,12 +82,26 @@ def run(episodes, is_training=True, render=False):
     mean_rewards = np.zeros(episodes)
     for t in range(episodes):
         mean_rewards[t] = np.mean(rewards_per_episode[max(0, t-100):(t+1)])
+        
+
     plt.plot(mean_rewards)
+
+    # Add labels and title
+    plt.xlabel('Episodes')
+    plt.ylabel('Mean Rewards')
+    plt.title('Mean Rewards per Episode')
 
     if is_training:
         plt.savefig(f'mountain_car_train.png')
     else:
         plt.savefig(f'mountain_car_test.png')
+    end_time = time.time()  # End timing
+
+    if is_training:
+        print(f"Training finished in {end_time - start_time} seconds")  # Print the time taken for training
+    else:
+        print(f"Testing finished in {end_time - start_time} seconds")
+
 
 if __name__ == '__main__':
     mode = sys.argv[1]
