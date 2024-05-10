@@ -10,7 +10,7 @@ In this project, I explore the application of reinforcement learning algorithms 
 
 To run the code in this repository, you will need to have the following dependencies installed:
 
-- Python 3.x
+- Python 3.11
 - OpenAI Gym
 - NumPy
 - Matplotlib
