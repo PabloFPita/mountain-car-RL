@@ -14,9 +14,9 @@ def run(episodes, is_training=True, render=False):
     vel_space = np.linspace(env.observation_space.low[1], env.observation_space.high[1], 40)    # Between -0.07 and 0.07
 
     if(is_training):
-        q = np.zeros((len(pos_space), len(vel_space), env.action_space.n)) # init a 20x20x3 array
+        q = np.zeros((len(pos_space), len(vel_space), env.action_space.n)) # init a 40x40x3 array
     else:
-        f = open('mountain_car.pkl', 'rb')
+        f = open(f'models\mountain_car.pkl', 'rb')
         q = pickle.load(f)
         f.close()
 
@@ -75,7 +75,7 @@ def run(episodes, is_training=True, render=False):
 
     # Save Q table to file
     if is_training:
-        f = open('mountain_car.pkl','wb')
+        f = open(f'models\mountain_car.pkl','wb')
         pickle.dump(q, f)
         f.close()
 
@@ -92,9 +92,9 @@ def run(episodes, is_training=True, render=False):
     plt.title('Mean Rewards per Episode')
 
     if is_training:
-        plt.savefig(f'mountain_car_train.png')
+        plt.savefig(f'plots-rewards\mountain_car_train.png')
     else:
-        plt.savefig(f'mountain_car_test.png')
+        plt.savefig(f'plots-rewards\mountain_car_test.png')
     end_time = time.time()  # End timing
 
     if is_training:
