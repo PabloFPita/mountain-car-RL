@@ -6,6 +6,14 @@ import sys
 import time
 
 def run(episodes, is_training=True, render=False):
+    """
+    Run the Mountain Car RL algorithm.
+
+    Args:
+        episodes (int): The number of episodes to run.
+        is_training (bool, optional): Whether to run in training mode or not. Defaults to True.
+        render (bool, optional): Whether to render the environment. Defaults to False.
+    """
 
     env = gym.make('MountainCar-v0', render_mode='human' if render else None)
 
@@ -20,11 +28,11 @@ def run(episodes, is_training=True, render=False):
         q = pickle.load(f)
         f.close()
 
-    learning_rate_a = 0.9 # alpha or learning rate
-    discount_factor_g = 0.9 # gamma or discount factor.
+    learning_rate_a = 0.9 # alpha or learning rate. If we increase this, the agent will learn faster but may not converge.
+    discount_factor_g = 0.9 # gamma or discount factor. If we increase this, the agent will care more about future rewards.
 
     epsilon = 1         # 1 = 100% random actions
-    epsilon_decay_rate = 2/episodes # epsilon decay rate
+    epsilon_decay_rate = 2/episodes # epsilon decay rate. If we increase this, the agent will explore more initially.
     rng = np.random.default_rng()   # random number generator
 
     rewards_per_episode = np.zeros(episodes)
